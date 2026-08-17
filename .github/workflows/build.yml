@@ -1,0 +1,31 @@
+name: Build Android Native Mod
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+
+      - name: Setup Android NDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 30
+          ndk-version: '25.2.9519653'
+
+      - name: Configure and Compile for Android
+        run: |
+          xmake f -p android -a arm64-v8a --ndk=$ANDROID_NDK_ROOT -m release -y
+          xmake -y
+
+      - name: Upload Compiled Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: Personalized-Android-Mod
+          path: build/android/arm64-v8a/release/*.so
