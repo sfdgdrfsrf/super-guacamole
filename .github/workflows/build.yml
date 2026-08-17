@@ -28,6 +28,7 @@ jobs:
           mkdir -p /tmp/fake_ll/ll/api/event/server
           mkdir -p /tmp/fake_ll/ll/api/mod
           mkdir -p /tmp/fake_ll/mc/world/level
+          mkdir -p /tmp/fake_ll/mc/world/actor
           ln -s . Utils
           ln -s . Hooks
 
@@ -92,10 +93,16 @@ jobs:
           #define LL_REGISTER_MOD(...)
           EOF
 
-          # 5. Inject World Events and base game types (Actor)
-          cat << 'EOF' > /tmp/fake_ll/ll/api/event/world/ActorAddEvent.h
+          # 5. Inject Base Actor Engine Layout (Actor.h)
+          cat << 'EOF' > /tmp/fake_ll/mc/world/actor/Actor.h
           #pragma once
           class Actor { public: void setModel(...) {} };
+          EOF
+
+          # 6. Inject World Events
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/world/ActorAddEvent.h
+          #pragma once
+          #include "mc/world/actor/Actor.h"
           namespace ll {
               namespace event {
                   class ActorAddEvent {
@@ -106,7 +113,7 @@ jobs:
           }
           EOF
 
-          # 6. Inject Mock Minecraft Game Engine Base Layouts (Level.h)
+          # 7. Inject Mock Minecraft Game Engine Level Layouts (Level.h)
           cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
           #pragma once
           #include <string>
@@ -124,7 +131,7 @@ jobs:
           };
           EOF
 
-          # 7. Inject Server Events (Starting, Stopping, and Tick)
+          # 8. Inject Server Events (Starting, Stopping, and Tick)
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
           #pragma once
           namespace ll {
