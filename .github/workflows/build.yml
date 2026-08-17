@@ -25,11 +25,6 @@ jobs:
           ln -s . Utils
           ln -s . Hooks
 
-      - name: Download LeviLamina Headers
-        run: |
-          mkdir -p ll/api
-          curl -L -o ll/api/Logger.h https://githubusercontent.com || echo "Fallback layout"
-
       - name: Configure and Compile for Android
         run: |
           xmake f -p android -a arm64-v8a --ndk=$ANDROID_NDK_ROOT -m release -y
