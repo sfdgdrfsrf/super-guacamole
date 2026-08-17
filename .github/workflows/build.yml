@@ -19,6 +19,11 @@ jobs:
           api-level: 30
           ndk-version: '25.2.9519653'
 
+      - name: Create Shortcut Folders
+        run: |
+          ln -s . Utils
+          ln -s . Hooks
+
       - name: Configure and Compile for Android
         run: |
           xmake f -p android -a arm64-v8a --ndk=$ANDROID_NDK_ROOT -m release -y
