@@ -22,18 +22,21 @@ jobs:
       - name: Clear Blockers and Create Clean External Directory
         run: |
           rm -rf Utils Hooks ll /tmp/fake_ll
-          mkdir -p /tmp/fake_ll/ll/api
+          mkdir -p /tmp/fake_ll/ll/api/memory
           ln -s . Utils
           ln -s . Hooks
 
       - name: Inject Mock Headers Globally
         run: |
+          # 1. Inject Logger.h that accepts standard strings and string appends
           cat << 'EOF' > /tmp/fake_ll/ll/api/Logger.h
           #pragma once
+          #include <string>
           namespace ll {
               class Logger { 
               public: 
-                  Logger(...) {} 
+                  Logger(const std::string&) {} 
+                  Logger(const char*) {}
                   template<typename... Args> void info(Args...) {} 
                   template<typename... Args> void error(Args...) {} 
               };
@@ -41,6 +44,14 @@ jobs:
                   using Logger = ::ll::Logger; 
               }
           }
+          EOF
+
+          # 2. Inject Mock Hook.h file to resolve the missing memory layout
+          cat << 'EOF' > /tmp/fake_ll/ll/api/memory/Hook.h
+          #pragma once
+          // Mocking framework hooks to bypass build dependencies
+          #define LL_TYPE_INSTANCE_HOOK(...)
+          #define LL_TYPE_STATIC_HOOK(...)
           EOF
 
       - name: Configure and Compile for Android
