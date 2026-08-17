@@ -1,0 +1,30 @@
+{
+    "enabled": true,
+    "seedSource": "uuid",
+    "fixedSeed": 16045690984833335166,
+
+    "textureSwapEnabled": true,
+    "textureBlockNamespaceFilter": ["minecraft"],
+    "textureSwapIntensity": 0.6,
+
+    "inventoryScrambleEnabled": true,
+    "inventoryShufflePasses": 3,
+    "inventoryRescrambleIntervalTicks": 0,
+
+    "mobModelSwapEnabled": true,
+    "mobTargetFilter": ["zombie", "skeleton", "pig", "cow", "sheep"],
+    "mobModelPool": [
+        "minecraft:zombie",
+        "minecraft:skeleton",
+        "minecraft:pig",
+        "minecraft:cow",
+        "minecraft:sheep",
+        "minecraft:chicken",
+        "minecraft:creeper",
+        "minecraft:spider"
+    ],
+    "mobSwapIntensity": 0.5,
+
+    "verboseLogging": true,
+    "dryRun": false
+}

@@ -1,0 +1,32 @@
+# Build outputs
+build/
+xmake.d/
+.xmake/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln
+*.vcxproj*
+
+# Binaries
+*.dll
+*.lib
+*.pdb
+*.exp
+*.obj
+*.o
+*.a
+
+# OS
+Thumbs.db
+.DS_Store
+
+# BDS (don't commit server binaries)
+bedrock_server/
+BDS/
+
+# Config (user-specific, generated at runtime)
+plugins/Personalized/config.json
