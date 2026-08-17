@@ -24,6 +24,7 @@ jobs:
           rm -rf Utils Hooks ll /tmp/fake_ll
           mkdir -p /tmp/fake_ll/ll/api/memory
           mkdir -p /tmp/fake_ll/ll/api/event
+          mkdir -p /tmp/fake_ll/ll/api/mod
           ln -s . Utils
           ln -s . Hooks
 
@@ -70,6 +71,20 @@ jobs:
                   };
               }
           }
+          EOF
+
+          # 4. Inject Mock NativeMod.h file for mod entry registration
+          cat << 'EOF' > /tmp/fake_ll/ll/api/mod/NativeMod.h
+          #pragma once
+          namespace ll {
+              namespace mod {
+                  class NativeMod {
+                  public:
+                      NativeMod() = default;
+                  };
+              }
+          }
+          #define LL_REGISTER_MOD(...)
           EOF
 
       - name: Configure and Compile for Android
