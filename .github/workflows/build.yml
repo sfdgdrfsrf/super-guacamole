@@ -19,22 +19,35 @@ jobs:
           api-level: 30
           ndk-version: '25.2.9519653'
 
-      - name: Clear Blockers and Create Shortcuts
+      - name: Clear Blockers and Create Clean External Directory
         run: |
-          rm -rf Utils Hooks ll
+          rm -rf Utils Hooks ll /tmp/fake_ll
+          mkdir -p /tmp/fake_ll/ll/api
           ln -s . Utils
           ln -s . Hooks
 
-      - name: Inject Mock LeviLamina Headers
+      - name: Inject Mock Headers Globally
         run: |
-          mkdir -p ll/api
-          echo '#pragma once' > ll/api/Logger.h
-          echo 'namespace ll { namespace api { class Logger { public: template<typename... Args> void info(Args...) {} template<typename... Args> void error(Args...) {} }; } }' >> ll/api/Logger.h
+          cat << 'EOF' > /tmp/fake_ll/ll/api/Logger.h
+          #pragma once
+          namespace ll {
+              class Logger { 
+              public: 
+                  Logger(...) {} 
+                  template<typename... Args> void info(Args...) {} 
+                  template<typename... Args> void error(Args...) {} 
+              };
+              namespace api { 
+                  using Logger = ::ll::Logger; 
+              }
+          }
+          EOF
 
       - name: Configure and Compile for Android
         run: |
           xmake f -p android -a arm64-v8a --ndk=$ANDROID_NDK_ROOT -m release -y
-          xmake -y
+          # This appends the clean /tmp path directly to the compiler's include flag
+          xmake cxflags="-I/tmp/fake_ll" -y
 
       - name: Upload Compiled Binary
         uses: actions/upload-artifact@v4
