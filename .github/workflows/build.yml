@@ -21,9 +21,15 @@ jobs:
 
       - name: Clear Blockers and Create Shortcuts
         run: |
-          rm -rf Utils Hooks
+          rm -rf Utils Hooks ll
           ln -s . Utils
           ln -s . Hooks
+
+      - name: Inject Mock LeviLamina Headers
+        run: |
+          mkdir -p ll/api
+          echo '#pragma once' > ll/api/Logger.h
+          echo 'namespace ll { namespace api { class Logger { public: template<typename... Args> void info(Args...) {} template<typename... Args> void error(Args...) {} }; } }' >> ll/api/Logger.h
 
       - name: Configure and Compile for Android
         run: |
