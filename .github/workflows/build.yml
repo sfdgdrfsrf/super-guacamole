@@ -25,6 +25,7 @@ jobs:
           mkdir -p /tmp/fake_ll/ll/api/memory
           mkdir -p /tmp/fake_ll/ll/api/event/world
           mkdir -p /tmp/fake_ll/ll/api/event/player
+          mkdir -p /tmp/fake_ll/ll/api/event/server
           mkdir -p /tmp/fake_ll/ll/api/mod
           ln -s . Utils
           ln -s . Hooks
@@ -98,6 +99,16 @@ jobs:
                   public:
                       Actor& getActor() { static Actor a; return a; }
                   };
+              }
+          }
+          EOF
+
+          # 6. Inject Server Events
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
+          #pragma once
+          namespace ll {
+              namespace event {
+                  class ServerStartingEvent {};
               }
           }
           EOF
