@@ -23,7 +23,8 @@ jobs:
         run: |
           rm -rf Utils Hooks ll /tmp/fake_ll
           mkdir -p /tmp/fake_ll/ll/api/memory
-          mkdir -p /tmp/fake_ll/ll/api/event
+          mkdir -p /tmp/fake_ll/ll/api/event/world
+          mkdir -p /tmp/fake_ll/ll/api/event/player
           mkdir -p /tmp/fake_ll/ll/api/mod
           ln -s . Utils
           ln -s . Hooks
@@ -85,6 +86,20 @@ jobs:
               }
           }
           #define LL_REGISTER_MOD(...)
+          EOF
+
+          # 5. Inject World Events and base game types (Actor)
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/world/ActorAddEvent.h
+          #pragma once
+          class Actor { public: void setModel(...) {} };
+          namespace ll {
+              namespace event {
+                  class ActorAddEvent {
+                  public:
+                      Actor& getActor() { static Actor a; return a; }
+                  };
+              }
+          }
           EOF
 
       - name: Configure and Compile for Android
