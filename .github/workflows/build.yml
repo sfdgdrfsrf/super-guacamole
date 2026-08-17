@@ -103,12 +103,21 @@ jobs:
           }
           EOF
 
-          # 6. Inject Server Events
+          # 6. Inject Server Events (Starting and Stopping)
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
           #pragma once
           namespace ll {
               namespace event {
                   class ServerStartingEvent {};
+              }
+          }
+          EOF
+
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStoppingEvent.h
+          #pragma once
+          namespace ll {
+              namespace event {
+                  class ServerStoppingEvent {};
               }
           }
           EOF
