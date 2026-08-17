@@ -32,7 +32,7 @@ jobs:
 
       - name: Inject Mock Headers Globally
         run: |
-          # 1. Inject Logger.h that accepts standard strings and string appends
+          # 1. Inject Logger.h with the missing warn() method
           cat << 'EOF' > /tmp/fake_ll/ll/api/Logger.h
           #pragma once
           #include <string>
@@ -42,6 +42,7 @@ jobs:
                   Logger(const std::string&) {} 
                   Logger(const char*) {}
                   template<typename... Args> void info(Args...) {} 
+                  template<typename... Args> void warn(Args...) {} 
                   template<typename... Args> void error(Args...) {} 
               };
               namespace api { 
@@ -57,7 +58,7 @@ jobs:
           #define LL_TYPE_STATIC_HOOK(...)
           EOF
 
-          # 3. Inject Mock EventBus.h file to satisfy event handlers
+          # 3. Inject Mock EventBus.h with the missing emplaceListener method
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/EventBus.h
           #pragma once
           namespace ll {
@@ -69,6 +70,7 @@ jobs:
                           return instance;
                       }
                       template<typename T, typename F> void createListener(F&&) {}
+                      template<typename T, typename F> void emplaceListener(F&&) {}
                       template<typename T> void addListener(void*) {}
                   };
               }
