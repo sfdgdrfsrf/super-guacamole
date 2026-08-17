@@ -1,39 +1,20 @@
-/**
- * xmake.lua — Build configuration for Personalized (LeviLamina native mod).
- *
- * Prerequisites:
- *   - xmake (https://xmake.io)
- *   - LeviLamina SDK / headers installed
- *   - BDS (Bedrock Dedicated Server) headers (via LeviLamina or endstone)
- *   - nlohmann/json (vendored or system-installed)
- *
- * Build:
- *   xmake f -p windows -a x64 -m release
- *   xmake
- *
- * Output:
- *   build/windows/x64/release/Personalized.dll
- */
+-- xmake.lua
+set_project("Personalized")
+set_version("1.0.0")
 
--- ─────────────────────────────────────────────
---  Project definition
--- ─────────────────────────────────────────────
-add_rules("mode.debug", "mode.release")
-set_languages("cxx20")
+-- Configure for C++20 standard
+set_languages("c++20")
 
 target("Personalized")
     set_kind("shared")
-    set_basename("Personalized")
-
-    -- ── Source files ──
-    add_files("src/**.cpp")
-
-    -- ── Header search paths ──
-    add_includedirs("src", {public = true})
-    add_includedirs("include", {public = true})
-
-    -- ── LeviLamina / BDS SDK ──
-    -- Adjust these paths to match your LeviLamina installation.
+    add_files("src/*.cpp")
+    add_files("src/Hooks/*.cpp")
+    add_files("src/Utils/*.cpp")
+    
+    -- Ensure include paths match standard project layouts
+    add_includedirs("src")
+    add_includedirs("src/Hooks")
+    add_includedirs("src/Utils")
     -- Typical layout:
     --   LeviLamina/
     --     include/   ← ll/ mc/ headers
