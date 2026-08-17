@@ -7,33 +7,12 @@ set_languages("c++20")
 
 target("Personalized")
     set_kind("shared")
-    add_files("src/*.cpp")
-    add_files("src/Hooks/*.cpp")
-    add_files("src/Utils/*.cpp")
     
-    -- Ensure include paths match standard project layouts
-    add_includedirs("src")
-    add_includedirs("src/Hooks")
-    add_includedirs("src/Utils")
-    -- Typical layout:
-    --   LeviLamina/
-    --     include/   ← ll/ mc/ headers
-    --     lib/       ← prebuilt .lib files
-    --
-    -- If using the LeviLamina template repo, these are auto-configured.
-    add_includedirs("$(projectdir)/LeviLamina/include", {public = true})
-    add_includedirs("$(projectdir)/BDS/include", {public = true})
-
-    -- ── Link libraries ──
-    add_links("LeviLamina")
-
-    -- ── System libraries ──
-    if is_plat("windows") then
-        add_syslinks("kernel32", "user32", "ntdll")
-    end()
-
-    -- ── Compiler flags ──
-    -- MSVC-specific (BDS is Windows-only for native mods)
+    -- This matches all .cpp files in the same folder as xmake.lua
+    add_files("*.cpp")
+    
+    -- This tells the compiler to look in the current folder for header files
+    add_includedirs(".")
     if is_plat("windows") then
         add_cxxflags("/EHsc", {force = true})       -- C++ exceptions
         add_cxxflags("/W3", {force = true})          -- Warning level 3
