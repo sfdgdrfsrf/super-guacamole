@@ -23,6 +23,7 @@ jobs:
         run: |
           rm -rf Utils Hooks ll /tmp/fake_ll
           mkdir -p /tmp/fake_ll/ll/api/memory
+          mkdir -p /tmp/fake_ll/ll/api/event
           ln -s . Utils
           ln -s . Hooks
 
@@ -49,9 +50,26 @@ jobs:
           # 2. Inject Mock Hook.h file to resolve the missing memory layout
           cat << 'EOF' > /tmp/fake_ll/ll/api/memory/Hook.h
           #pragma once
-          // Mocking framework hooks to bypass build dependencies
           #define LL_TYPE_INSTANCE_HOOK(...)
           #define LL_TYPE_STATIC_HOOK(...)
+          EOF
+
+          # 3. Inject Mock EventBus.h file to satisfy event handlers
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/EventBus.h
+          #pragma once
+          namespace ll {
+              namespace event {
+                  class EventBus {
+                  public:
+                      static EventBus& getInstance() {
+                          static EventBus instance;
+                          return instance;
+                      }
+                      template<typename T, typename F> void createListener(F&&) {}
+                      template<typename T> void addListener(void*) {}
+                  };
+              }
+          }
           EOF
 
       - name: Configure and Compile for Android
