@@ -19,8 +19,9 @@ jobs:
           api-level: 30
           ndk-version: '25.2.9519653'
 
-      - name: Create Shortcut Folders
+      - name: Clear Blockers and Create Shortcuts
         run: |
+          rm -rf Utils Hooks
           ln -s . Utils
           ln -s . Hooks
 
