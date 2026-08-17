@@ -29,7 +29,7 @@ jobs:
           mkdir -p /tmp/fake_ll/ll/api/mod
           mkdir -p /tmp/fake_ll/mc/world/level
           ln -s . Utils
-          ln -s s Hooks
+          ln -s . Hooks
 
       - name: Inject Mock Headers Globally
         run: |
@@ -107,6 +107,23 @@ jobs:
           EOF
 
           # 6. Inject Server Events (Starting and Stopping)
+          cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
+          #pragma once
+          #include <string>
+          #include <vector>
+
+          class Player {
+          public:
+              std::string const& getUuid() const { static std::string u = "00000000-0000-0000-0000-000000000000"; return u; }
+              std::string getName() const { return "Player"; }
+          };
+
+          class Level {
+          public:
+              std::vector<Player*> getAllPlayers() const { return std::vector<Player*>(); }
+          };
+          EOF
+
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
           #pragma once
           namespace ll {
@@ -123,25 +140,6 @@ jobs:
                   class ServerStoppingEvent {};
               }
           }
-          EOF
-
-          # 7. Inject Mock Minecraft Game Engine Base Layouts (Level.h)
-          cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
-          #pragma once
-          #include <string>
-          #include <vector>
-
-          // Stabbing out standard game objects required by your layout functions
-          class Player {
-          public:
-              std::string const& getUuid() const { static std::string u = "00000000-0000-0000-0000-000000000000"; return u; }
-              std::string getName() const { return "Player"; }
-          };
-
-          class Level {
-          public:
-              std::vector<Player*> getAllPlayers() const { return std::vector<Player*>(); }
-          };
           EOF
 
       - name: Configure and Compile for Android
