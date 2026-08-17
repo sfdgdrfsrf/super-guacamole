@@ -99,7 +99,14 @@ jobs:
           class Actor { public: void setModel(...) {} };
           EOF
 
-          # 6. Inject World Events
+          # 6. Inject Mob Engine Layout (Mob.h)
+          cat << 'EOF' > /tmp/fake_ll/mc/world/actor/Mob.h
+          #pragma once
+          #include "mc/world/actor/Actor.h"
+          class Mob : public Actor {};
+          EOF
+
+          # 7. Inject World Events
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/world/ActorAddEvent.h
           #pragma once
           #include "mc/world/actor/Actor.h"
@@ -113,7 +120,7 @@ jobs:
           }
           EOF
 
-          # 7. Inject Mock Minecraft Game Engine Level Layouts (Level.h)
+          # 8. Inject Mock Minecraft Game Engine Level Layouts (Level.h)
           cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
           #pragma once
           #include <string>
@@ -131,7 +138,7 @@ jobs:
           };
           EOF
 
-          # 8. Inject Server Events (Starting, Stopping, and Tick)
+          # 9. Inject Server Events (Starting, Stopping, and Tick)
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
           #pragma once
           namespace ll {
