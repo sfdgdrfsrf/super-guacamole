@@ -21,14 +21,15 @@ jobs:
 
       - name: Clear Blockers and Create Clean External Directory
         run: |
-          rm -rf Utils Hooks ll /tmp/fake_ll
+          rm -rf Utils Hooks ll mc /tmp/fake_ll
           mkdir -p /tmp/fake_ll/ll/api/memory
           mkdir -p /tmp/fake_ll/ll/api/event/world
           mkdir -p /tmp/fake_ll/ll/api/event/player
           mkdir -p /tmp/fake_ll/ll/api/event/server
           mkdir -p /tmp/fake_ll/ll/api/mod
+          mkdir -p /tmp/fake_ll/mc/world/level
           ln -s . Utils
-          ln -s . Hooks
+          ln -s s Hooks
 
       - name: Inject Mock Headers Globally
         run: |
@@ -122,6 +123,25 @@ jobs:
                   class ServerStoppingEvent {};
               }
           }
+          EOF
+
+          # 7. Inject Mock Minecraft Game Engine Base Layouts (Level.h)
+          cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
+          #pragma once
+          #include <string>
+          #include <vector>
+
+          // Stabbing out standard game objects required by your layout functions
+          class Player {
+          public:
+              std::string const& getUuid() const { static std::string u = "00000000-0000-0000-0000-000000000000"; return u; }
+              std::string getName() const { return "Player"; }
+          };
+
+          class Level {
+          public:
+              std::vector<Player*> getAllPlayers() const { return std::vector<Player*>(); }
+          };
           EOF
 
       - name: Configure and Compile for Android
