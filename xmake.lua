@@ -8,7 +8,7 @@ target("Personalized")
     set_kind("shared")
     add_files("*.cpp")
     
-    -- This points the compiler to the current folder for any path style
+    -- This defines a bypass macro so the missing LeviLamina files aren't needed
+    add_defines("DISABLE_LL_LOGGER")
+    
     add_includedirs(".")
-    add_includedirs("./Utils")
-    add_includedirs("./Hooks")
