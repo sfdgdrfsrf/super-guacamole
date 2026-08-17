@@ -8,7 +8,6 @@ target("Personalized")
     set_kind("shared")
     add_files("*.cpp")
     
-    -- This defines a bypass macro so the missing LeviLamina files aren't needed
-    add_defines("DISABLE_LL_LOGGER")
-    
+    -- This forces the compiler to look in the flat folder and our custom external temp folder
     add_includedirs(".")
+    add_includedirs("/tmp/fake_ll")
