@@ -106,7 +106,7 @@ jobs:
           }
           EOF
 
-          # 6. Inject Server Events (Starting and Stopping)
+          # 6. Inject Mock Minecraft Game Engine Base Layouts (Level.h)
           cat << 'EOF' > /tmp/fake_ll/mc/world/level/Level.h
           #pragma once
           #include <string>
@@ -124,6 +124,7 @@ jobs:
           };
           EOF
 
+          # 7. Inject Server Events (Starting, Stopping, and Tick)
           cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerStartingEvent.h
           #pragma once
           namespace ll {
@@ -138,6 +139,15 @@ jobs:
           namespace ll {
               namespace event {
                   class ServerStoppingEvent {};
+              }
+          }
+          EOF
+
+          cat << 'EOF' > /tmp/fake_ll/ll/api/event/server/ServerTickEvent.h
+          #pragma once
+          namespace ll {
+              namespace event {
+                  class ServerTickEvent {};
               }
           }
           EOF
